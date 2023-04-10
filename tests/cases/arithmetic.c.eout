@@ -1,0 +1,36 @@
+m : N
+m : N
+m : m * m
+s : m
+;
+m : N
+s : m
+m : N
+s : m
+s : s + s
+;
+m : N
+m : N
+m : m * m
+s : m
+m : N
+s : m
+s : s + s
+;
+m : N
+s : m
+m : N
+m : N
+m : m * m
+s : m
+s : s + s
+;
+m : N
+s : m
+m : N
+s : m
+s : s + s
+m : N
+s : m
+s : s + s
+;

@@ -1,0 +1,3 @@
+#include "parsley_grammar.h"
+
+void p_parse(void* input, symbol_t (*p_lex)(void*));

@@ -1,0 +1,299 @@
+
+New patches:
+
+[unrevert
+anon**20230410173546
+ Ignore-this: 3b39dca2b669fc908f0b39fb15dc5d2b839fa5ea87b180a4a3442bd49192044d37519b6eb016af44
+] hunk ./pgr/yacc.ref.c 1
+-#define _GNU_SOURCE // for asprintf
+-#include <string.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-
++#include "case.h"
+ #include "parsley_grammar.h"
+hunk ./pgr/yacc.ref.c 3
+-#include "yacc.ref.h"
+-
+-#define NUM_LEN 5
+-
+-extern FILE* outf[2];
+-char* nterms_s, *current_dec;
+-unsigned int nterms_s_size = 100;
+-unsigned int nsymbols = 0;
+-
+-void init_hook(void) {
+-  nterms_s = calloc(nterms_s_size, 1);
+-  strcpy(nterms_s, "rule_def_t gr_rules[] = {\n");
+-}
+-void close_hook(void) {
+-  fprintf(outf[0], nterms_s);
+-  fprintf(outf[0], "{ 0 }\n};\n");
+-  free(nterms_s);
+-  free(current_dec);
+-}
+-
+-symbol_t c_zone__TOKEN_C_ZONE(symbol_t* tokens){
+- fprintf(outf[0], (char*)tokens[0].data); return (symbol_t){ 0 }; 
+-}
+-
+-symbol_t ntdec__TOKEN_ALPHA_058(symbol_t* tokens){
+-  free(current_dec);
+-  current_dec = calloc(tokens->dsize + 1, 1);
+-  strncpy(current_dec, tokens->data, tokens->dsize);
+-  fprintf(outf[1], "#define %s %i\n", current_dec, 256 + nsymbols);
+-  nsymbols++;
+-  return (symbol_t){ ntdec, 0, NULL }; 
+-}
+-
+-symbol_t rule__alpha_list(symbol_t* tokens){
+-
+-  for(u_int16_t i = 0; i < tokens[0].dsize; i++) {
+-    if( ((char*)tokens[0].data)[i] == ' ') ((char*)tokens[0].data)[i] = ','; 
+-  }
+-  
+-  char* rule_definition;
+-  asprintf(&rule_definition, "{ %s, (unsigned int[]){ %s, 0 }, NULL },\n", current_dec, (char*)tokens[0].data);
+-
+-  while(strlen(nterms_s) +
+-	strlen(rule_definition) >= nterms_s_size) nterms_s = realloc(nterms_s, nterms_s_size *= 2); 
+-  strcat(nterms_s, rule_definition);
+-  
+-  free(rule_definition);
+-  
+-  return (symbol_t){ rule, 0, NULL };
+-  
+-}
+-
+-symbol_t rule__alpha_list_TOKEN_C_FUNCTION(symbol_t* tokens){
+-  
+-  char* buffer = calloc(tokens[0].dsize + 1, 1);
+-  memcpy(buffer, tokens[0].data, tokens[0].dsize);
+-  for(u_int16_t i = 0; i < tokens[0].dsize; i++) {
+-    if(buffer[i] == ' ') buffer[i] = '_';
+-    if(buffer[i] == '\'') {
+-      if(buffer[i+1] == '\\') fprintf(stderr, "please do no use escape sequences as tokens\n"), exit(1);
+-      char* num_buff;
+-      asprintf(&num_buff, "%d", buffer[i+1]);
+-      if(((unsigned char)buffer[i+1]) < 100) {
+-	buffer[i] = '0';
+-	i++;
+-      }
+-      memcpy(buffer + i, num_buff, strlen(num_buff)); // strlen() allows to cut the EOF
+-      i++;
+-    }
+-  }
+-  char* rule_function_name;
+-  asprintf(&rule_function_name, "%s__%s", current_dec, buffer);
+-  free(buffer);
+-
+-  char* rule_function;
+-  asprintf(&rule_function, "symbol_t %s(symbol_t* symbols){\n%s\n}\n", rule_function_name, (char*)tokens[1].data);
+-  
+-  buffer = calloc(tokens[0].dsize + 1, 1);
+-  memcpy(buffer, tokens[0].data, tokens[0].dsize);
+-  for(u_int16_t i = 0; i < tokens[0].dsize; i++) {
+-    if(buffer[i] == ' ') buffer[i] = ','; 
+-  }
+-  
+-  char* rule_definition;
+-  asprintf(&rule_definition, "{ %s, (unsigned int[]){ %s, 0 }, %s },\n", current_dec, buffer, rule_function_name);
+-  
+-  free(buffer);
+-
+-  fprintf(outf[0], "%s\n", rule_function);
+-
+-  while(strlen(nterms_s) + strlen(rule_definition) >= nterms_s_size) nterms_s = realloc(nterms_s, nterms_s_size *= 2); 
+-  strcat(nterms_s, rule_definition);
+-  
+-  free(rule_function_name);
+-  free(rule_definition);
+-  free(rule_function);
+-  
+-  return (symbol_t){ rule, 0, NULL };
+- 
+-}
+-
+-
+-symbol_t rule__empty(symbol_t* tokens){
+-
+-  char* rule_definition;
+-  asprintf(&rule_definition, "{ %s, NULL, NULL },\n", current_dec);
+-
+-  while(strlen(nterms_s) + strlen(rule_definition) >= nterms_s_size) nterms_s = realloc(nterms_s, nterms_s_size *= 2); 
+-  strcat(nterms_s, rule_definition);
+-  
+-  free(rule_definition);
+-  
+-  return (symbol_t){ rule, 0, NULL };
+-  
+-}
+-
+-symbol_t rule__TOKEN_C_FUNCTION(symbol_t* tokens){
+-  
+-  char* rule_function_name;
+-  asprintf(&rule_function_name, "%s__empty", current_dec);
+-
+-  char* rule_definition;
+-  asprintf(&rule_definition, "{ %s, NULL, %s },\n", current_dec, rule_function_name);
+-
+-  while(strlen(nterms_s) + strlen(rule_definition) >= nterms_s_size) nterms_s = realloc(nterms_s, nterms_s_size *= 2); 
+-  strcat(nterms_s, rule_definition);
+-  
+-  free(rule_definition);
+-
+-  char* rule_function;
+-  asprintf(&rule_function, "symbol_t %s(symbol_t* symbols){\n%s\n}\n", rule_function_name, (char*)tokens[0].data);
+-  
+-  fprintf(outf[0], "%s\n", rule_function);
+-
+-  free(rule_function_name);
+-  free(rule_function);
+-  return (symbol_t){ rule, 0, NULL };
+-  
+-}
+-
+-symbol_t alpha_list__TOKEN_ALPHA(symbol_t* tokens){
+- char* buffer = malloc(tokens->dsize); strcpy(buffer, tokens->data); return (symbol_t){ alpha_list, tokens->dsize, buffer }; 
+-}
+-
+-symbol_t alpha_list__alpha_list_TOKEN_ALPHA(symbol_t* tokens){
+-
+-  char* buffer = calloc(tokens[0].dsize + tokens[1].dsize, 1);
+-  strncpy(buffer, tokens[0].data, tokens[0].dsize);
+-  buffer[strlen(buffer)] = ' ';
+-  strncat(buffer, tokens[1].data, tokens[1].dsize);
+-  return (symbol_t){ alpha_list, strlen(buffer) + 1, buffer };
+- 
+-}
+-
+-symbol_t token_def__037_TOKEN_TOK_TOKEN_ALPHA(symbol_t* tokens){
+-  fprintf(outf[1], "#define %s %d\n", (char*)tokens[2].data, nsymbols + 256);
+-    
+-  nsymbols++;
+-
+-  return (symbol_t){ token_def, 0, NULL };
+-
+- 
+-}
+-
+-symbol_t token_def__token_def_TOKEN_ALPHA(symbol_t* tokens){
+-  fprintf(outf[1], "#define %s %d\n", (char*)tokens[1].data, nsymbols + 256);
+-    
+-  nsymbols++;
+-
+-  return (symbol_t){ token_def, 0, NULL };
+- 
+-}
++
++#include <stddef.h>
+ 
+ rule_def_t gr_rules[] = {
+hunk ./pgr/yacc.ref.c 7
+-  { root,           (unsigned int[]){ c_zone,token_def_list,'%','%',ntdef_list,'%','%', 0 }, NULL                                 }, // 0
+-  { c_zone,         (unsigned int[]){ TOKEN_C_ZONE,                                     0 }, c_zone__TOKEN_C_ZONE                 }, // 1
+-  { ntdec,          (unsigned int[]){ TOKEN_ALPHA,':',                                  0 }, ntdec__TOKEN_ALPHA_058               }, // 2
+-  { ntdef_list,     (unsigned int[]){ ntdef,                                            0 }, NULL                                 }, // 3
+-  { ntdef_list,     (unsigned int[]){ ntdef_list, ntdef,                                0 }, NULL                                 }, // 4
+-  { ntdef,          (unsigned int[]){ ntdec, rule_list,                                 0 }, NULL                                 }, // 5
+-  { rule_list,      (unsigned int[]){ end_rule,                                         0 }, NULL                                 }, // 6
+-  { rule_list,      (unsigned int[]){ rule, rule_list,                                  0 }, NULL                                 }, // 7
+-  { rule,           (unsigned int[]){ rule_body, '|',                                   0 }, NULL                                 },
+-  { end_rule,       (unsigned int[]){ rule_body, ';',                                   0 }, NULL                                 },
+-  { rule_body,      (unsigned int[]){ alpha_list,                                       0 }, rule__alpha_list                     }, // 8
+-  { rule_body,      (unsigned int[]){ alpha_list, TOKEN_C_FUNCTION,                     0 }, rule__alpha_list_TOKEN_C_FUNCTION    }, // 9
+-  { rule_body,      NULL,                                                                    rule__empty                          }, // 8
+-  { rule_body,      (unsigned int[]){ TOKEN_C_FUNCTION,                                 0 }, rule__TOKEN_C_FUNCTION               }, // 9
+-  { alpha_list,     (unsigned int[]){ TOKEN_ALPHA,                                      0 }, alpha_list__TOKEN_ALPHA              }, // 10
+-  { alpha_list,     (unsigned int[]){ alpha_list,TOKEN_ALPHA,                           0 }, alpha_list__alpha_list_TOKEN_ALPHA   }, // 11
+-  { token_def_list, (unsigned int[]){ token_def,                                        0 }, NULL                                 }, // 12
+-  { token_def_list, (unsigned int[]){ token_def_list,token_def,                         0 }, NULL                                 }, // 13
+-  { token_def,      (unsigned int[]){ '%',TOKEN_TOK,TOKEN_ALPHA,                        0 }, token_def__037_TOKEN_TOK_TOKEN_ALPHA }, // 14
+-  { token_def,      (unsigned int[]){ token_def, TOKEN_ALPHA,                           0 }, token_def__token_def_TOKEN_ALPHA     }, // 15
++  { root,           (unsigned int[]){ c_zone,token_def_list,'%','%',ntdef_list,'%','%', 0 }, NULL }, // 0
++  { c_zone,         (unsigned int[]){ TOKEN_C_ZONE,                                     0 }, NULL }, // 1
++  { ntdec,          (unsigned int[]){ TOKEN_ALPHA,':',                                  0 }, NULL }, // 2
++  { ntdef_list,     (unsigned int[]){ ntdef,                                            0 }, NULL }, // 3
++  { ntdef_list,     (unsigned int[]){ ntdef_list, ntdef,                                0 }, NULL }, // 4
++  { ntdef,          (unsigned int[]){ ntdec, rule_list, ';',                            0 }, NULL }, // 5
++  { rule_list,      (unsigned int[]){ rule,                                             0 }, NULL }, // 6
++  { rule_list,      (unsigned int[]){ rule_list, '|', rule,                             0 }, NULL }, // 7
++  { rule,           (unsigned int[]){ alpha_list,                                       0 }, NULL }, // 8
++  { rule,           (unsigned int[]){ alpha_list, TOKEN_C_FUNCTION,                     0 }, NULL }, // 9
++  { alpha_list,     (unsigned int[]){ TOKEN_ALPHA,                                      0 }, NULL }, // 10
++  { alpha_list,     (unsigned int[]){ alpha_list,TOKEN_ALPHA,                           0 }, NULL }, // 11
++  { token_def_list, (unsigned int[]){ token_def,                                        0 }, NULL }, // 12
++  { token_def_list, (unsigned int[]){ token_def_list,token_def,                         0 }, NULL }, // 13
++  { token_def,      (unsigned int[]){ '%',TOKEN_TOK,TOKEN_ALPHA,                        0 }, NULL }, // 14
++  { token_def,      (unsigned int[]){ token_def, TOKEN_ALPHA,                           0 }, NULL }, // 15
+   { 0 }
+ };
+
+Context:
+
+[maybe finished ??
+manu@basilisk.fr**20230410173403
+ Ignore-this: 14bba763360fb02c74ac6d923db25656508ff009d2ee8d75726e96aea8cc56b0d035a5706359833a
+] 
+[lots of bug fixes
+manu@basilisk.fr**20230401165005
+ Ignore-this: 32c22bd6cc15b33b970db8d38a6221f71b591eef7d52e9a2fb96c36dc7143d31e9bba6e3e9486f73
+] 
+[tree and empty finished, fixed nasty memory access bug and made code cleaner in the process :)
+manu@basilisk.fr**20230327160454
+ Ignore-this: a0069fbd62cc8be07f7169e91920d469d73e51a51dd58f82abb4eba898b312a214c4f941f7cd7a8a
+] 
+[treeified ! :) + full [] empty [] empty support
+manu@basilisk.fr**20230325161245
+ Ignore-this: ab83131dcb5b4aba0c6020b61ae637a26051a642fe7386899244aaae842a931acef9dd26605c11ea
+] 
+[before switch from array structure to tree structure
+manu@basilisk.fr**20230321170727
+ Ignore-this: f1e983c483d528caaef0778206e4fe6d825a648a711eb0780fec849c6e17bb54dd5e8d7fc0e1ad0f
+] 
+[dir structure and test cases
+manu@basilisk.fr**20230320180632
+ Ignore-this: 319bb74db0ed7b5dea1c155e4ab502ca8024dcbff6f45194c2e2a6d95b8e54c0aa30155cfe0343dc
+] 
+[switched from sr-conflict table to start_of_rule() for resolving s/r conflicts
+manu@basilisk.fr**20230320093903
+ Ignore-this: 2da52d29fb28e4a6236c9ad3688427495eda76a04f56a6cea18f6ed3212254278062da71964156d0
+] 
+[rolling build system : pgr / pgr-debug
+manu@basilisk.fr**20230312115625
+ Ignore-this: 1be3724ac685f6193dd15326f4ed2fce
+] 
+[bootstraped yacc parser
+manu@basilisk.fr**20230312112643
+ Ignore-this: 895461e19b3dfdb09de88af9c0f488c7
+] 
+[v: .9 : nearing completion !  
+manu@basilisk.fr**20230220105203
+ Ignore-this: 5c087ea296435920b33340fb45dfa5b3
+] 
+[switched naming schemes to parsley and cleanup
+manu@basilisk.fr**20230212190101
+ Ignore-this: a5854e3a4882b64c574115c7afe7f55b
+] 
+[LR(1) parser 
+manu@basilisk.fr**20230122133305
+ Ignore-this: 70b137e5693223d23de050180bd7b951
+] 
+[fcc v2 parser complete + sr conflict finder
+manu@basilisk.fr**20221107184507
+ Ignore-this: c1b43633aad16f4b455659aff10cc29c
+] 
+[fcc v2 lexer and parser semi complete
+manu@basilisk.fr**20221101171340
+ Ignore-this: 39524b0568114b2e6422d5d39c876474
+] 
+[fcc v2.0 initial comit 
+manu@basilisk.fr**20221029144930
+ Ignore-this: c42d1e19b3a0909e1634cd5dd995ca4e
+] 
+[initial record
+manu@basilisk.fr**20220921184825
+ Ignore-this: f1567232bd174634bf00a9b854f83820
+] 
+Patch bundle hash:
+7aa19cd4276f2ab618236d19f353e8a2bd9c32ae

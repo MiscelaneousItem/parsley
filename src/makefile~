@@ -1,0 +1,27 @@
+PARSLEY_PATH   = $(HOME)/c/parsley
+
+_CORE_FILES    = $(PARSLEY_PATH)/src/parsley.c
+_CORE_DEPS     = $(PARSLEY_PATH)/src/makefile $(PARSLEY_PATH)/src/parsley_grammar.h
+_CORE_FLAGS    = -g -Wall -I $(PARSLEY_PATH)/src/
+
+_CC          = gcc
+
+_TEST_FILES    = $(PARSLEY_PATH)/tests/test.c $(PARSLEY_PATH)/tests/tlex.c
+_TEST_DEPS     = $(PARSLEY_PATH)/tests/cases/*.c
+
+PROFILE_FILES    = $(PARSLEY_PATH)/tests/profile/profile.c $(PARSLEY_PATH)/tests/profile/case.c $(PARSLEY_PATH)/tests/profile/plex.c
+PROFILE_DEPS     = $(PARSLEY_PATH)/tests/profile/case.h
+
+tests: $(_CORE_FILES) $(_TEST_FILES) $(_CORE_DEPS) $(_TEST_DEPS)
+	for test in $(PARSLEY_PATH)/tests/cases/*.c; do \
+		echo $${test} ':'; \
+		$(_CC) $(_CORE_FILES) $(_TEST_FILES) $${test} $(_CORE_FLAGS) -o $${test}.x &&\
+		$${test}.x > $${test}.out ; \
+		diff $${test}.out $${test}.eout &&\
+		rm $${test}.out; \
+	done ;
+
+profile: $(_CORE_FILES) $(_PROFILE_FILES) $(_CORE_DEPS) $(_PROFILE_DEPS)
+	$(_CC) $(_CORE_FILES) $(PROFILE_FILES) $(_CORE_FLAGS) -o profile -pg -D NRUNS=10000
+	./profile
+	gprof profile gmon.out > prof-results

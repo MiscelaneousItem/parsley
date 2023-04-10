@@ -1,0 +1,17 @@
+#define TOKEN_ALPHA 256
+#define TOKEN_C_ZONE 257
+#define TOKEN_C_FUNCTION 258
+#define TOKEN_TOK 259
+#define root 260
+#define c_zone 261
+#define ntdec 262
+#define ntdef_list 263
+#define ntdef 264
+#define rule_list 265
+#define rule 266
+#define end_rule 267
+#define rule_body 268
+#define alpha_list 269
+#define token_def_list 270
+#define token_def 271
+#define empty 272
