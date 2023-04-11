@@ -1,16 +1,16 @@
-PARSLEY_PATH   = $(HOME)/c/parsley
+PARSLEY_PATH   = ..
 
 _CORE_FILES    = $(PARSLEY_PATH)/src/parsley.c
 _CORE_DEPS     = $(PARSLEY_PATH)/src/makefile $(PARSLEY_PATH)/src/parsley_grammar.h
-_CORE_FLAGS    = -g -Wall -I $(PARSLEY_PATH)/src/
+_CORE_FLAGS    = -g -Wall -I $(PARSLEY_PATH)/src/ --std=c99 --pedantic
 
-_CC          = gcc
+_CC            = gcc
 
 _TEST_FILES    = $(PARSLEY_PATH)/tests/test.c
 _TEST_DEPS     = $(PARSLEY_PATH)/tests/cases/*.c
 
-PROFILE_FILES    = $(PARSLEY_PATH)/tests/profile/profile.c $(PARSLEY_PATH)/tests/profile/case.c $(PARSLEY_PATH)/tests/profile/plex.c
-PROFILE_DEPS     = $(PARSLEY_PATH)/tests/profile/case.h
+PROFILE_FILES  = $(PARSLEY_PATH)/tests/profile/profile.c $(PARSLEY_PATH)/tests/profile/case.c $(PARSLEY_PATH)/tests/profile/plex.c
+PROFILE_DEPS   = $(PARSLEY_PATH)/tests/profile/case.h
 
 tests: $(_CORE_FILES) $(_TEST_FILES) $(_CORE_DEPS) $(_TEST_DEPS)
 	for test in $(PARSLEY_PATH)/tests/cases/*.c; do \
