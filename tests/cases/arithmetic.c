@@ -13,27 +13,27 @@ char* input =
   "N + N * N ; "
   "N + N + N;";
 
-symbol_t _s(symbol_t*) {
+symbol_t _s(symbol_t* nu) {
   printf("s : s + s\n");
   return (symbol_t){ 0 };
 }
 
-symbol_t _s__m(symbol_t*) {
+symbol_t _s__m(symbol_t* nu) {
   printf("s : m\n");
   return (symbol_t){ 0 };
 }
 
-symbol_t _m(symbol_t*) {
+symbol_t _m(symbol_t* nu) {
   printf("m : m * m\n");
   return (symbol_t){ 0 };
 }
 
-symbol_t _m__N(symbol_t*) {
+symbol_t _m__N(symbol_t* nu) {
   printf("m : N\n");
   return (symbol_t){ 0 };
 }
 
-symbol_t _b(symbol_t*) {
+symbol_t _b(symbol_t* nu) {
   printf(";\n");
   return (symbol_t){ 0 };
 }

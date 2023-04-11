@@ -8,22 +8,22 @@
 
 char* input = "AB AC A";
 
-symbol_t _a(symbol_t*) {
+symbol_t _a(symbol_t* nu) {
   printf("a\n");
   return (symbol_t){ 0 };
 }
 
-symbol_t _e(symbol_t*) {
+symbol_t _e(symbol_t* nu) {
   printf("e\n");
   return (symbol_t){ 0 };
 }
 
-symbol_t _b(symbol_t*) {
+symbol_t _b(symbol_t* nu) {
   printf("b\n");
   return (symbol_t){ 0 };
 }
 
-symbol_t _c(symbol_t*) {
+symbol_t _c(symbol_t* nu) {
   printf("c\n");
   return (symbol_t){ 0 };
 }

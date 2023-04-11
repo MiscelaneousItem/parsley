@@ -6,12 +6,12 @@
 
 char* input = "A";
 
-symbol_t _a(symbol_t*) {
+symbol_t _a(symbol_t* nu) {
   printf("a\n");
   return (symbol_t){ 0 };
 }
 
-symbol_t _e(symbol_t*) {
+symbol_t _e(symbol_t* nu) {
   printf("e\n");
   return (symbol_t){ 0 };
 }
