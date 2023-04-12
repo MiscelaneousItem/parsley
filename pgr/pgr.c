@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "parsley.h"
+#include "pgrlex.h"
 
 char* open_file(char* filepath) { // returns a char* containing the contents of a file
   char* buffer;
@@ -39,7 +40,7 @@ int main(int argc, char** argv) {
   outf[1] = fopen(buffer, "w");
   free(buffer);
   
-  p_parse(code);
+  p_parse(gr_rules, code, pgrlex);
   
   fclose(outf[0]);
   fclose(outf[1]);

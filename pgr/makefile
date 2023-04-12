@@ -1,8 +1,8 @@
-PARSLEY_PATH   = $(HOME)/c/parsley
+PARSLEY_PATH   = ..
 
 CORE_FILES    = $(PARSLEY_PATH)/src/parsley.c
-CORE_DEPS     = $(PARSLEY_PATH)/pgr/makefile $(PARSLEY_PATH)/src/parsley_grammar.h $(PARSLEY_PATH)/src/parsley_lex.h
-CORE_FLAGS    = -g -Wall -I $(PARSLEY_PATH)/src/
+CORE_DEPS     = $(PARSLEY_PATH)/pgr/makefile $(PARSLEY_PATH)/src/parsley_grammar.h
+CORE_FLAGS    = -g -Wall -I $(PARSLEY_PATH)/src/ --std=c99 --pedantic
 
 CC          = gcc
 

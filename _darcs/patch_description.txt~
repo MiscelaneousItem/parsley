@@ -1,0 +1,70 @@
+
+# Please enter the patch name in the first line, and
+# optionally, a long description in the following lines.
+#
+# Lines starting with '#' will be ignored.
+#
+#
+# Summary of selected changes:
+#
+# A ./pgr/
+# A ./pgr/basilisk.c
+# A ./pgr/basilisk.h
+# A ./pgr/basilisk.yacc
+# A ./pgr/makefile
+# A ./pgr/pgr
+# A ./pgr/pgr.c
+# A ./pgr/pgrlex.c
+# A ./pgr/pgrlex.h
+# A ./pgr/restored
+# A ./pgr/yacc.c
+# A ./pgr/yacc.h
+# A ./pgr/yacc.ref.c
+# A ./pgr/yacc.ref.h
+# A ./pgr/yacc.yacc
+# A ./src/
+# A ./src/.x
+# A ./src/gmon.out
+# A ./src/khash.h
+# A ./src/makefile
+# A ./src/parsley.c
+# A ./src/parsley.h
+# A ./src/parsley_grammar.h
+# A ./src/prof-results
+# A ./src/profile
+# A ./tests/
+# A ./tests/cases/
+# A ./tests/cases/arithmetic.c
+# A ./tests/cases/arithmetic.c.eout
+# A ./tests/cases/arithmetic.c.x
+# A ./tests/cases/empty-basic.c
+# A ./tests/cases/empty-basic.c.eout
+# A ./tests/cases/empty-basic.c.x
+# A ./tests/cases/empty-complex-2.c
+# A ./tests/cases/empty-complex-2.c.eout
+# A ./tests/cases/empty-complex-2.c.x
+# A ./tests/cases/empty-complex.c
+# A ./tests/cases/empty-complex.c.eout
+# A ./tests/cases/empty-complex.c.x
+# A ./tests/cases/empty-first-tok-complex.c
+# A ./tests/cases/empty-first-tok-complex.c.eout
+# A ./tests/cases/empty-first-tok-complex.c.x
+# A ./tests/cases/empty-first-tok.c
+# A ./tests/cases/empty-first-tok.c.eout
+# A ./tests/cases/empty-first-tok.c.x
+# A ./tests/cases/recursion.c
+# A ./tests/cases/recursion.c.eout
+# A ./tests/cases/recursion.c.x
+# A ./tests/cases/sr-conf-complex.c
+# A ./tests/cases/sr-conf-complex.c.eout
+# A ./tests/cases/sr-conf-complex.c.x
+# A ./tests/cases/sr-conf-simple.c
+# A ./tests/cases/sr-conf-simple.c.eout
+# A ./tests/cases/sr-conf-simple.c.x
+# A ./tests/profile/
+# A ./tests/profile/case.c
+# A ./tests/profile/case.h
+# A ./tests/profile/plex.c
+# A ./tests/profile/profile.c
+# A ./tests/profile/yacc.yacc
+# A ./tests/test.c
