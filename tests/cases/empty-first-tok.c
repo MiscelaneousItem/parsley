@@ -1,4 +1,5 @@
-/* complex empty test */
+/* empty first token */
+/* check if the parser can infer a empty token at the start of a rule  */
 
 #include <stdio.h>
 

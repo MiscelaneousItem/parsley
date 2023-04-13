@@ -22,6 +22,6 @@ tests: $(_CORE_FILES) $(_TEST_FILES) $(_CORE_DEPS) $(_TEST_DEPS)
 	done ;
 
 profile: $(_CORE_FILES) $(_PROFILE_FILES) $(_CORE_DEPS) $(_PROFILE_DEPS)
-	$(_CC) $(_CORE_FILES) $(PROFILE_FILES) $(_CORE_FLAGS) -o profile -pg -D NRUNS=10000
+	$(_CC) $(_CORE_FILES) $(PROFILE_FILES) $(_CORE_FLAGS) -o profile -pg -D NRUNS=100000
 	./profile
 	gprof profile gmon.out > prof-results

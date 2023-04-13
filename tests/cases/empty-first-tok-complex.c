@@ -1,4 +1,5 @@
-/* complex empty test */
+/* complex empty first token test */
+/* check if the parser can infer the existence of a empty token at the start of a rule in front of a nterm */
 
 #include <stdio.h>
 

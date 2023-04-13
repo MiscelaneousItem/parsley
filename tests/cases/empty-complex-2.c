@@ -1,4 +1,5 @@
 /* complex empty test */
+/* check if the parser will not infer a nullable token when it could shift and generate a equivalent token */
 
 #include <stdio.h>
 

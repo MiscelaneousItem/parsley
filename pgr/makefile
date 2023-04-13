@@ -4,20 +4,18 @@ CORE_FILES    = $(PARSLEY_PATH)/src/parsley.c
 CORE_DEPS     = $(PARSLEY_PATH)/pgr/makefile $(PARSLEY_PATH)/src/parsley_grammar.h
 CORE_FLAGS    = -g -Wall -I $(PARSLEY_PATH)/src/ --std=c99 --pedantic
 
-CC          = gcc
+CC            = gcc
 
-PGR_FILES    = $(PARSLEY_PATH)/pgr/pgr.c $(PARSLEY_PATH)/pgr/pgrlex.c
+PGR_FILES     = $(PARSLEY_PATH)/pgr/pgr.c $(PARSLEY_PATH)/pgr/pgrlex.c
 
-YACC_FILES   = $(PARSLEY_PATH)/pgr/yacc.c 
-YACC_DEPS    = $(PARSLEY_PATH)/pgr/yacc.yacc $(PARSLEY_PATH)/pgr/yacc.h
+YACC_FILES    = $(PARSLEY_PATH)/pgr/yacc.c 
+YACC_DEPS     = $(PARSLEY_PATH)/pgr/yacc.yacc $(PARSLEY_PATH)/pgr/yacc.h
 
+REF_FILES     = $(PARSLEY_PATH)/pgr/yacc.ref.c
+REF_DEPS      = $(PARSLEY_PATH)/pgr/yacc.ref.h
 
-
-REF_FILES    = $(PARSLEY_PATH)/pgr/yacc.ref.c
-REF_DEPS     = $(PARSLEY_PATH)/pgr/yacc.ref.h
-
-YACC_FLAGS   = -D INIT_HOOK_ON -D CLOSE_HOOK_ON
-DEBUG_FLAGS  = -D PARSE_VERBOSE -D LEX_VERBOSE
+YACC_FLAGS    = -D INIT_HOOK_ON -D CLOSE_HOOK_ON
+DEBUG_FLAGS   = -D PARSE_VERBOSE -D LEX_VERBOSE
 
 
 debug: $(CORE_FILES) $(PGR_FILES) $(CORE_DEPS) $(YACC_DEPS)

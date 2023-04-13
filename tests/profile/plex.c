@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 static char isin(char a, char* b) {
-  u_int32_t i = 0;
+  unsigned int i = 0;
   while(b[i] != '\0') {
     if(a == b[i]) return 1;
     i++;
@@ -26,8 +26,8 @@ symbol_t p_lex(void* input) {
 
   char* code_input = input; 
   
-  static u_int64_t i = 0;
-  u_int32_t j = 0;
+  static unsigned int i = 0;
+  unsigned int j = 0;
   char* buffer = calloc(65, 1);
    
   while( ( isin(code_input[i], " \n\t") || seq2(code_input + i, "//") || seq2(code_input + i, "/*") ) && code_input[i] != '\0') { // get to the first non space/newline/tab character
@@ -74,9 +74,9 @@ symbol_t p_lex(void* input) {
 	  return (symbol_t){ TOKEN_ALPHA, strlen(buffer) + 1, buffer };
 	}
 	// code zone handling
-	u_int16_t zone_size = 100;
+	unsigned int zone_size = 100, paren_open = 1, in_string = 0, in_char = 0; 
 	char* code_zone = calloc(zone_size, 1);
-	u_int16_t paren_open = 1, in_string = 0, in_char = 0;
+	
 	if(code_input[i] == '{') i++; // handling for %{ code zone openings
 	
 	while(code_input[i] != '\0' && paren_open) {

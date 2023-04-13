@@ -1,6 +1,6 @@
 /* basic empty test */
 
-/* check wherer the parser can infer the existence of an nullable token given a rule and sequence using only tokens */
+/* check if the parser can handle both left and right recursion  */
 
 #include <stdio.h>
 
